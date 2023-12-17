@@ -15,11 +15,12 @@ function ConvertHandler() {
   this.getUnit = function (input) {
     let result;
 
-    const regex = /^([0-9]+(?:\.[0-9]+)?)\s*([a-zA-Z]+)$/;
+  const regex = /^((?:[0-9]+(?:\.[0-9]+)?)|(?:[0-9]+\/[0-9]+))\s*([a-zA-Z]+)$/;
     const match = input.match(regex);
 
     if (match) {
-      result = match[2].toLowerCase();
+      result= match[1].includes('/') ? match[1] : parseFloat(match[1]);
+
     }
     return result;
   };
