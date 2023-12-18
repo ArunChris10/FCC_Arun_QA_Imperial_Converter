@@ -36,7 +36,7 @@ function ConvertHandler() {
       Km: "mi",
     };
 
-    result = conversionComp[initUnit];
+    result = conversionComp.initUnit;
     return result;
   };
 

@@ -11,7 +11,12 @@ module.exports = function (app) {
     
     const input = req.query.input
     
-    convertHandler.convert(input)
+    let number = convertHandler.getNum(input)
+    let unit = convertHandler.getUnit(input)
+    
+    let result = convertHandler.convert(number,unit)
+    
+    res.json({ result });
   })
 
 };
