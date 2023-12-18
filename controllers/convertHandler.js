@@ -1,59 +1,100 @@
+const units = ['L', 'l', 'gal', 'GAL', 'mi', 'MI', 'km', 'KM', 'lbs', 'LBS', 'kg', 'KG']
+
 function ConvertHandler() {
+
   this.getNum = function (input) {
-    let result;
 
-    const regex = /^([0-9]+(?:\.[0-9]+)?)\s*([a-zA-Z]+)$/;
-    const match = input.match(regex);
+    let result = input.split(/[a-zA-Z]/).join('');
 
-    if (match) {
-      result = parseFloat(match[1]);
+    if (result.replace(/[^\/]/g, '').length >= 2) {
+      return 'invalid number'
     }
-
-    return result;
+    else if (result.replace(/[^\/.]/g, '').length >= 2) {
+      const arr = result.split('/')
+      return parseFloat(parseFloat(arr[0]) / parseFloat(arr[1]))
+    }
+    else if (result.replace(/[^\/]/g, '').length === 1) {
+      const arr = result.split('/')
+      return parseFloat(parseFloat(arr[0]) / parseFloat(arr[1]))
+    }
+    else if (result === '') {
+      return 1
+    }
+    else if (/\./g.test(result)) {
+      return parseFloat(result)
+    }
+    return parseInt(result);
   };
 
   this.getUnit = function (input) {
-    let result;
 
-  const regex = /^((?:[0-9]+(?:\.[0-9]+)?)|(?:[0-9]+\/[0-9]+))\s*([a-zA-Z]+)$/;
-    const match = input.match(regex);
+    let unit = input.match(/[^\.\d\/]/g).join('')
 
-    if (match) {
-      result= match[1].includes('/') ? match[1] : parseFloat(match[1]);
-
+    for (let i = 0; i < units.length; i++) {
+      if (units[i] === unit) {
+        if (units[i] === 'L' || units[i] === 'l') return units[i].toUpperCase()
+        return units[i].toLowerCase()
+      }
     }
-    return result;
+    return 'invalid unit';
   };
 
   this.getReturnUnit = function (initUnit) {
     let result;
-    let conversionComp = {
-      gal: "L",
-      L: "gal",
-      lbs: "Kg",
-      Kg: "lbs",
-      mi: "Km",
-      Km: "mi",
-    };
 
-    result = conversionComp.initUnit;
-    return result;
+    let u = this.getUnit(initUnit)
+    if (u !== 'invalid unit') {
+      switch (u) {
+        case 'L':
+          result = 'gal'
+          break;
+        case 'gal':
+          result = 'L'
+          break;
+        case 'mi':
+          result = 'km'
+          break;
+        case 'km':
+          result = 'mi'
+          break;
+        case 'lbs':
+          result = 'kg'
+          break;
+        case 'kg':
+          result = 'lbs'
+          break;
+      }
+    }
+    return result === undefined ? 'invalid unit' : result;
   };
 
   this.spellOutUnit = function (unit) {
     let result;
 
-    let spellUnit = {
-      gal: "gallons",
-      L: "litres",
-      lbs: "pounds",
-      Kg: "kilograms",
-      mi: "miles",
-      Km: "kilometres",
-    };
-
-    result = spellUnit[unit];
-    return result;
+    let u = this.getUnit(unit)
+    if (u !== 'invalid unit') {
+      switch (u) {
+        case 'L':
+          result = 'liters'
+          break;
+        case 'gal':
+          result = 'gallons'
+          break;
+        case 'mi':
+          result = 'miles'
+          break;
+        case 'km':
+          result = 'kilometers'
+          break;
+        case 'lbs':
+          result = 'pounds'
+          break;
+        case 'kg':
+          result = 'kilograms'
+          break;
+      }
+    }
+    return result === undefined ? 'invalid unit' : result;
   };
 
   this.convert = function (initNum, initUnit) {
@@ -62,35 +103,46 @@ function ConvertHandler() {
     const miToKm = 1.60934;
     let result;
 
-    let returnUnit = this.getReturnUnit(initUnit);
+    let iN = initNum
+    let iU = this.getUnit(initUnit)
 
-    if (returnUnit == "gal") {
-      result = initNum*(1/galToL)
+    if (iN !== 'invalid number' && iU !== 'invalid unit') {
+      switch (iU) {
+        case 'gal':
+          result = iN * galToL
+          break
+        case 'L':
+          result = iN / galToL
+          break
+        case 'lbs':
+          result = iN * lbsToKg
+          break
+        case 'kg':
+          result = iN / lbsToKg
+          break
+        case 'mi':
+          result = iN * miToKm
+          break
+        case 'km':
+          result = iN / miToKm
+          break
+      }
     }
-    else if (returnUnit == "L") {
-      result = initNum*(galToL)
-    }
-    else if (returnUnit == "lbs") {
-      result = initNum*(1/lbsToKg)
-    }
-    else  if (returnUnit == "Kg") {
-      result = initNum*(lbsToKg)
-    }
-    else if (returnUnit == "mi") {
-      result = initNum*(1/miToKm)
-    }
-    else if (returnUnit == "Kms") {
-      result = initNum*(miToKm)
-    }
-
-    return result;
+    return result ? result : 'Conversion error';
   };
 
   this.getString = function (initNum, initUnit, returnNum, returnUnit) {
-    let result;
-    result = `${initNum} ${initUnit} converts to ${returnNum} ${returnUnit}`
-    return result;
+    returnNum = parseFloat(returnNum.toFixed(5))
+    return {
+      initNum: initNum,
+      initUnit: initUnit,
+      returnNum: returnNum,
+      returnUnit: returnUnit,
+      string:
+        `${initNum} ${this.spellOutUnit(initUnit)} converts to ${returnNum.toFixed(5)} ${this.spellOutUnit(returnUnit)}`
+    }
   };
+
 }
 
 module.exports = ConvertHandler;
