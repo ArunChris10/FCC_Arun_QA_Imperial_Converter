@@ -10,14 +10,12 @@ suite('Functional Tests', function () {
     suite('GET api/convert => conversion object', () => {
 
         test('Test GET /api/convert?input=10L', (done) => {
-
-
             chai
                 .request(server)
                 .get('/api/convert'/*?input=10L*/)
                 .query({ input: '10L' })
                 .end((err, res) => {
-                    assert.equal(res.status, 200, "Arun")
+                    assert.equal(res.status, 200)
                     assert.equal(res.body.initNum, 10)
                     assert.equal(res.body.initUnit, 'L')
                     assert.equal(res.body.returnNum, 2.64172)
