@@ -31,8 +31,9 @@ suite('Functional Tests', function () {
                 .query({ input: '32g' })
                 .end((err, res) => {
                     assert.equal(res.body, 'invalid unit')
+                    done()
                 })
-            done()
+
         })
 
         test('Test GET /api/convert?input=3/7.2/4kg', (done) => {
@@ -42,8 +43,9 @@ suite('Functional Tests', function () {
                 .query({ input: '3/7.2/4kg' })
                 .end((err, res) => {
                     assert.equal(res.body, 'invalid number')
+                    done()
                 })
-            done()
+
         })
 
         test('Test GET /api/convert?input=3/7.2/4kilomegagram', (done) => {
@@ -53,8 +55,9 @@ suite('Functional Tests', function () {
                 .query({ input: '3/7.2/4kilomegagram' })
                 .end((err, res) => {
                     assert.equal(res.body, 'invalid number and unit')
+                    done()
                 })
-            done()
+
         })
 
         test('Test GET /api/convert?input=kg', (done) => {
@@ -67,8 +70,9 @@ suite('Functional Tests', function () {
                     assert.equal(res.body.initUnit, 'kg')
                     assert.equal(res.body.returnNum, 2.20462)
                     assert.equal(res.body.returnUnit, 'lbs')
+                    done()
                 })
-            done()
+
         })
     })
 });
