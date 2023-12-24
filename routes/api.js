@@ -9,7 +9,7 @@ module.exports = function (app) {
 
   app.route('/api/convert').get((req, res) => {
 
-    let { input } = req.query
+    let input = encodeURIComponent(req.query.input)
 
     if (input) {
       let num = convertHandler.getNum(input)

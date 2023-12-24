@@ -4,6 +4,8 @@ function ConvertHandler() {
 
   this.getNum = function (input) {
 
+    input = decodeURIComponent(input)
+
     let result = input.split(/[a-zA-Z]/).join('');
 
     if (result.replace(/[^\/]/g, '').length >= 2) {
@@ -27,6 +29,8 @@ function ConvertHandler() {
   };
 
   this.getUnit = function (input) {
+
+    input = decodeURIComponent(input)
 
     let unit = input.match(/[^\.\d\/]/g).join('')
 
