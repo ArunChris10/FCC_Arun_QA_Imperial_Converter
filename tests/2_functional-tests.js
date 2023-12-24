@@ -2,6 +2,7 @@ const chaiHttp = require('chai-http');
 const chai = require('chai');
 let assert = chai.assert;
 const server = require('../server');
+const { query } = require('express');
 
 chai.use(chaiHttp);
 
@@ -56,6 +57,7 @@ suite('Functional Tests', function () {
                 .end((err, res) => {
                     assert.equal(res.body, 'invalid number and unit')
                     done()
+
                 })
 
         })
@@ -75,4 +77,7 @@ suite('Functional Tests', function () {
 
         })
     })
+
+
+
 });
